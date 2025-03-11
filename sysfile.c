@@ -442,3 +442,56 @@ sys_pipe(void)
   fd[1] = fd1;
   return 0;
 }
+
+int 
+sys_shmget(void){
+  key_t key;
+  size_t size;
+  int shmflag;
+
+  if(argint(0, &key) < 0 || argint(1, (int *)&size) < 0|| argint(2, &shmflag) < 0){
+    return -1;
+  }
+
+  cprintf("Returns  the identifier of the System V shared memory segment associated with the value of the argument key %d and size %d.\n", key, size);
+  return 0;
+}
+
+int 
+sys_shmat(void){
+  int shmid, shmflag;
+  const void *shmaddr;
+
+  if(argint(0, &shmid) < 0 ||  argptr(1, (void **)&shmaddr, sizeof(void *)) < 0 || argint(2, &shmflag) < 0){
+    return -1;
+  }
+
+  cprintf("Attaches the System V shared memory segment identified by shmid %d to  the address space of the calling process.\n", shmid);
+  return 0;
+}
+
+int 
+sys_shmdt(void){
+  const void *shmaddr;
+
+  if(argptr(0, &shmaddr, sizeof(void *)) < 0 ){
+    return -1;
+  }
+
+  cprintf("Detaches the shared memory segment located at the address specified  by  shmaddr %d from the address space of the calling process.\n", shmaddr);
+  return 0;
+}
+
+int
+sys_shmctl(void){
+  
+  int shmid, op;
+  //third para is pointer to struct shmid_ds
+
+  if(argint(0, &shmid) < 0 || argint(1, &op) < 0){
+    return -1;
+  }
+
+  cprintf("Performs the control operation specified by op %d on the System V shared memory segment whose identifier is given in shmid. %d\n", op, shmid);
+  return 0;
+}
